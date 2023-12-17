@@ -1,0 +1,62 @@
+# Функция для кнопки выбора файла
+
+#include <iostream>
+#include <filesystem>
+
+void select_file() {
+    std::string file_path;
+    std::cout << "Enter file path: ";
+    std::cin >> file_path;
+    
+    // Perform operations with the file_path as needed
+    
+    // For demonstration purposes, let's display the selected file path
+    std::cout << "Selected file path: " << file_path << std::endl;
+}
+
+
+
+
+# Сплит данных и # Обработка данных
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+void clearDataset(const std::vector<std::string>& excelSource, const std::vector<std::string>& listOfDelimiters,
+                  const std::vector<char>& listOfLetters, const std::vector<char>& listOfSymbols) {
+    std::vector<std::string> preFinalList;
+    std::vector<std::string> finalList;
+
+    for (const std::string& lineValue : excelSource) {
+        std::vector<std::string> listForSplitting;
+        listForSplitting.push_back(lineValue);
+        size_t lenListForSplitting = listForSplitting.size();
+        size_t parameter = 0;
+
+        while (parameter < lenListForSplitting) {
+            for (const std::string& delimiter : listOfDelimiters) {
+                if (listForSplitting[parameter].find(delimiter) != std::string::npos) {
+                    std::string value = listForSplitting[parameter];
+                    size_t pos = value.find(delimiter);
+                    while (pos != std::string::npos) {
+                        listForSplitting.push_back(value.substr(0, pos));
+                        value.erase(0, pos + delimiter.length());
+                        pos = value.find(delimiter);
+                    }
+                    if (!value.empty()) {
+                        listForSplitting.push_back(value);
+                    }
+                    listForSplitting.erase(listForSplitting.begin() + parameter);
+                    parameter = 0;
+                    lenListForSplitting = listForSplitting.size();
+                }
+            }
+            ++parameter;
+        }
+
+        for (const std::string& value : listForSplitting) {
+            preFinalList.push_back(value);
+        }
+    }
+}
